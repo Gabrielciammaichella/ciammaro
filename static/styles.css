@@ -1,0 +1,441 @@
+:root{
+  /* Fondo claro */
+  --bg:#ffffff;
+  --panel:#ffffff;
+  --card:#ffffff;
+
+  /* Tipografía / colores */
+  --text:#0a0a0a;
+  --white:#0a0a0a;   /* en tu CSS se usa como color principal */
+  --muted:#6b6b6b;
+
+  /* UI */
+  --border:#e6e6e6;
+  --accent:#c1121f;
+
+  --radius:18px;
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
+
+a{ color:inherit; }
+
+/* =========================
+   CONTENIDO
+   ========================= */
+.page{
+  padding:40px 6vw 80px;
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.hero{
+  max-width:760px;
+  margin:32px auto 28px;
+  text-align:center; /* como en el ejemplo */
+}
+.hero--compact{ margin-bottom:18px; }
+
+.eyebrow{
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:.22em;
+  font-size:.78rem;
+  margin-bottom:10px;
+  font-weight:600;
+}
+
+h1{
+  font-family:"Playfair Display", serif;
+  font-size:clamp(2.0rem, 3vw, 3.0rem);
+  line-height:1.15;
+  margin:0 0 12px;
+  letter-spacing:-0.02em;
+}
+
+p{ margin:0; color:var(--muted); }
+
+/* Títulos de sección tipo "Novedades" */
+.section-title{
+  font-family:"Inter", sans-serif;
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-weight:700;
+  font-size:1.1rem;
+  text-align:center;
+  margin:20px 0 10px;
+}
+
+/* =========================
+   GRID / CARDS
+   ========================= */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap:22px;
+  margin-top:22px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow: 0 10px 26px rgba(0,0,0,.06);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 16px 38px rgba(0,0,0,.10);
+  border-color: rgba(0,0,0,.14);
+}
+
+/* media placeholder: claro y prolijo */
+.card__media{
+  height:200px;
+  background:
+    radial-gradient(900px 260px at 30% 10%, rgba(193,18,31,.10), transparent 60%),
+    radial-gradient(800px 240px at 70% 70%, rgba(0,0,0,.06), transparent 60%),
+    #f6f6f6;
+  border-bottom:1px solid var(--border);
+}
+
+.card__body{ padding:18px 18px 20px; }
+
+.card__top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+h3{
+  margin:0;
+  font-size:1.02rem;
+  font-weight:600;
+  color:var(--text);
+  line-height:1.25;
+}
+
+/* descripción y microtexto como tienda */
+.desc{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:.92rem;
+}
+
+.price{
+  color:#000;
+  font-weight:800;
+  white-space:nowrap;
+  font-family:"Inter", sans-serif;
+}
+
+/* Botón estilo ecommerce */
+.btn{
+  margin-top:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  padding:12px 14px;
+  border:1px solid #000;
+  background:#000;
+  color:#fff;
+  text-decoration:none;
+  cursor:pointer;
+  font-weight:700;
+  font-size:.78rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+}
+
+.btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+  background:#111;
+  border-color:#111;
+}
+
+.btn--ghost{
+  width:100%;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+.footer{
+  border-top:1px solid var(--border);
+  margin-top:40px;
+}
+.footer__inner{
+  max-width:1200px;
+  margin:0 auto;
+  padding:22px 6vw;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+/* =========================
+   HEADER ECOMMERCE (negro)
+   ========================= */
+.header{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Top bar negro */
+.topbar{
+  background:#000;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  display:grid;
+  grid-template-columns: 220px 1fr 260px;
+  gap:18px;
+  align-items:center;
+  padding:14px 6vw;
+}
+
+.brand{
+  font-family:"Playfair Display", serif;
+  letter-spacing:.10em;
+  text-transform: uppercase;
+  text-decoration:none;
+  font-size:1.35rem;
+  color:#fff;
+}
+
+/* Buscador */
+.search{
+  display:flex;
+  align-items:center;
+  background:#fff;
+  border-radius:10px;
+  overflow:hidden;
+  height:42px;
+  border:1px solid rgba(0,0,0,.08);
+}
+
+.search__input{
+  border:none;
+  outline:none;
+  width:100%;
+  padding:0 14px;
+  font-size:0.95rem;
+}
+
+.search__btn{
+  border:none;
+  background:transparent;
+  width:44px;
+  height:42px;
+  cursor:pointer;
+  font-size:1.05rem;
+}
+
+/* Acciones */
+.actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:18px;
+}
+
+.action{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-decoration:none;
+  color:#fff;
+  opacity:.95;
+  gap:6px;
+  min-width:74px;
+}
+
+.action__icon{ font-size:1.1rem; }
+
+.action__text{
+  font-size:.82rem;
+  color:rgba(255,255,255,.75);
+}
+
+/* Badge carrito */
+.badge{
+  position:absolute;
+  top:-6px;
+  right:10px;
+  background:var(--accent);
+  color:#fff;
+  font-size:.72rem;
+  padding:2px 6px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.20);
+}
+
+/* Nav abajo */
+.nav{
+  background:#000;
+  display:flex;
+  justify-content:center;
+  gap:26px;
+  padding:10px 6vw 12px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+
+.nav__link{
+  text-decoration:none;
+  color:#fff;
+  font-size:.95rem;
+  opacity:.92;
+  position:relative;
+  padding:4px 0;
+}
+
+.nav__link::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  height:2px;
+  width:0%;
+  background:var(--accent);
+  transition: width .25s ease;
+}
+
+.nav__link:hover{ opacity:1; }
+.nav__link:hover::after{ width:100%; }
+
+/* Responsive header */
+@media (max-width: 900px){
+  .topbar{
+    grid-template-columns: 1fr;
+    gap:12px;
+  }
+  .actions{
+    justify-content:space-between;
+  }
+  .nav{
+    justify-content:flex-start;
+    overflow:auto;
+  }
+  .hero{
+    text-align:left;
+  }
+}
+
+/* =========================
+   LOGIN / AUTH PAGES (premium)
+   ========================= */
+.auth{
+  max-width: 420px;
+  margin: 80px auto 120px;
+  padding: 0 20px;
+}
+
+.auth h1{
+  font-family: "Playfair Display", serif;
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.auth label{
+  display:block;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: #111;
+  font-weight: 700;
+}
+
+.auth input{
+  width:100%;
+  padding: 14px 16px;
+  font-family:"Inter", sans-serif;
+  font-size: 0.95rem;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin-bottom: 18px;
+  background:#fff;
+  transition: border .2s ease, box-shadow .2s ease;
+}
+
+.auth input:focus{
+  outline:none;
+  border-color:#000;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+.auth .forgot{
+  display:block;
+  text-align:right;
+  font-size:0.85rem;
+  margin-top:-8px;
+  margin-bottom:22px;
+  color:#000;
+  text-decoration:none;
+}
+
+.auth .forgot:hover{ text-decoration: underline; }
+
+.auth button{
+  width:100%;
+  padding: 16px;
+  border-radius: 999px;
+  border:none;
+  background:#000;
+  color:#fff;
+  font-family:"Inter", sans-serif;
+  font-size:0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor:pointer;
+  font-weight:800;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.auth button:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  background:#111;
+}
+
+.auth .switch{
+  text-align:center;
+  margin-top: 22px;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.auth .switch a{
+  color:#000;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.auth .switch a:hover{ text-decoration: underline; }
+.logo{
+  height:32px;           /* ajustable */
+  width:auto;
+  display:block;
+}
+
+@media (max-width: 768px){
+  .logo{
+    height:50px;
+  }
+}

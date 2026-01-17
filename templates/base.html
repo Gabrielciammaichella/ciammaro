@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Ciammaro{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<header class="header">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <a class="brand" href="/">
+  <img src="{{ url_for('static', filename='logo-ciammaro.png') }}"
+       alt="Ciammaro"
+       class="logo">
+</a>
+
+
+    <form class="search" action="#" method="get">
+      <input
+        class="search__input"
+        type="text"
+        name="q"
+        placeholder="¿Qué estás buscando?"
+      />
+      <button class="search__btn" type="submit" aria-label="Buscar">⌕</button>
+    </form>
+
+    <div class="actions">
+
+      <!-- MI CUENTA / LOGIN -->
+      <a class="action"
+         href="{% if current_user.is_authenticated %}/account{% else %}/login{% endif %}">
+        <span class="action__icon">👤</span>
+        <span class="action__text">
+          {% if current_user.is_authenticated %}
+            Mi cuenta
+          {% else %}
+            Iniciar sesión
+          {% endif %}
+        </span>
+      </a>
+
+      <!-- SALIR (solo si está logueado) -->
+      {% if current_user.is_authenticated %}
+      <a class="action" href="/logout">
+        <span class="action__icon">↩</span>
+        <span class="action__text">Salir</span>
+      </a>
+      {% endif %}
+
+      <!-- CARRITO -->
+      <a class="action" href="#">
+        <span class="action__icon">🛒</span>
+        <span class="action__text">Mi carrito</span>
+        <span class="badge">0</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- NAV BAR -->
+  <nav class="nav">
+    <a class="nav__link" href="/">Inicio</a>
+    <a class="nav__link" href="/remeras">Remeras</a>
+  </nav>
+</header>
+
+<main class="page">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="footer__inner">© 2025 Ciammaro</div>
+</footer>
+
+</body>
+</html>

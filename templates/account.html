@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Ciammaro — Mi cuenta{% endblock %}
+
+{% block content %}
+<section class="auth">
+  <h1>Mi cuenta</h1>
+  <p>Sesión iniciada como <strong>{{ current_user.email }}</strong></p>
+
+  <a class="btn btn--ghost" href="/logout">Cerrar sesión</a>
+</section>
+{% endblock %}
