@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Carrito - Ciammaro{% endblock %}
+
+{% block content %}
+<section class="cart">
+
+  <div class="cart__header">
+    <h2 class="cart__title">Carrito</h2>
+    <a class="cart__back" href="{{ url_for('remeras') }}">← Seguir comprando</a>
+  </div>
+
+  {% if items|length == 0 %}
+    <div class="cart__empty">
+      <p>Tu carrito está vacío.</p>
+      <a class="btn btn--primary" href="{{ url_for('remeras') }}">Ver remeras</a>
+    </div>
+  {% else %}
+
+  <div class="cart__grid">
+    <!-- LISTA -->
+    <div class="cart__box">
+      <div class="cart__list">
+
+        {% for it in items %}
+        <div class="cart__item">
+          <div class="cart__itemMedia">
+            <img src="{{ url_for('static', filename=it.p['img']) }}" alt="{{ it.p['nombre'] }}">
+          </div>
+
+          <div class="cart__itemInfo">
+            <div class="cart__itemName">{{ it.p['nombre'] }}</div>
+            <div class="cart__itemPrice">
+              ${{ "{:,.0f}".format(it.p['precio']).replace(",", ".") }}
+            </div>
+          </div>
+
+          <div class="cart__itemActions">
+            <form class="qty" action="{{ url_for('cart_update', pid=it.p['id']) }}" method="post">
+              <input class="qty__input" type="number" name="qty" min="0" value="{{ it.qty }}">
+              <button class="btn btn--ghost" type="submit">Actualizar</button>
+            </form>
+
+            <div class="cart__subtotal">
+              <span>Subtotal</span>
+              <strong>${{ "{:,.0f}".format(it.subtotal).replace(",", ".") }}</strong>
+            </div>
+
+            <form action="{{ url_for('cart_remove', pid=it.p['id']) }}" method="post">
+              <button class="btn btn--danger" type="submit">Quitar</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+
+    <!-- RESUMEN -->
+    <aside class="cart__summary">
+      <h3 class="summary__title">Resumen</h3>
+
+      <div class="summary__row">
+        <span>Total</span>
+        <strong>${{ "{:,.0f}".format(total).replace(",", ".") }}</strong>
+      </div>
+
+      <a class="btn btn--primary summary__pay" href="{{ url_for('checkout') }}">
+        Ir a pagar
+      </a>
+
+      <p class="summary__note">
+        En el siguiente paso cargás dirección y datos para el envío.
+      </p>
+    </aside>
+  </div>
+
+  {% endif %}
+</section>
+{% endblock %}

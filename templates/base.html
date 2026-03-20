@@ -14,14 +14,31 @@
 <body>
 
 <header class="header">
+
+<!-- PROMO BAR (ENVÍO GRATIS) -->
+<!-- PROMO BAR (ENVÍO GRATIS) -->
+<div class="promo">
+  <div class="promo_inner">
+    <div class="promo_track">
+      <div class="promo_content">
+        <span class="promo_item">{{ promo_text }}</span>
+      </div>
+
+      <!-- DUPLICADO para loop infinito -->
+      <div class="promo_content" aria-hidden="true">
+        <span class="promo_item">{{ promo_text }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- TOP BAR -->
   <div class="topbar">
-    <a class="brand" href="/">
-  <img src="{{ url_for('static', filename='logo-ciammaro.png') }}"
-       alt="Ciammaro"
-       class="logo">
-</a>
-
+    <a class="brand" href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='logo-ciammaro.png') }}"
+           alt="Ciammaro"
+           class="logo">
+    </a>
 
     <form class="search" action="#" method="get">
       <input
@@ -37,7 +54,7 @@
 
       <!-- MI CUENTA / LOGIN -->
       <a class="action"
-         href="{% if current_user.is_authenticated %}/account{% else %}/login{% endif %}">
+         href="{% if current_user.is_authenticated %}{{ url_for('account') }}{% else %}{{ url_for('login') }}{% endif %}">
         <span class="action__icon">👤</span>
         <span class="action__text">
           {% if current_user.is_authenticated %}
@@ -50,17 +67,23 @@
 
       <!-- SALIR (solo si está logueado) -->
       {% if current_user.is_authenticated %}
-      <a class="action" href="/logout">
+      <a class="action" href="{{ url_for('logout') }}">
         <span class="action__icon">↩</span>
         <span class="action__text">Salir</span>
       </a>
       {% endif %}
 
       <!-- CARRITO -->
-      <a class="action" href="#">
+      <a class="action" href="{{ url_for('carrito') }}">
         <span class="action__icon">🛒</span>
         <span class="action__text">Mi carrito</span>
-        <span class="badge">0</span>
+
+        {% set cart = session.get('cart', {}) %}
+        {% set ns = namespace(count=0) %}
+        {% for k, v in cart.items() %}
+          {% set ns.count = ns.count + v %}
+        {% endfor %}
+        <span class="badge">{{ ns.count }}</span>
       </a>
 
     </div>
@@ -68,8 +91,8 @@
 
   <!-- NAV BAR -->
   <nav class="nav">
-    <a class="nav__link" href="/">Inicio</a>
-    <a class="nav__link" href="/remeras">Remeras</a>
+    <a class="nav__link" href="{{ url_for('index') }}">Inicio</a>
+    <a class="nav__link" href="{{ url_for('remeras') }}">Remeras</a>
   </nav>
 </header>
 

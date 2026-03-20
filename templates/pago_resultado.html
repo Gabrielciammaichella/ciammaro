@@ -1,0 +1,94 @@
+{# templates/pago_resultado.html #}
+{% extends "base.html" %}
+{% block title %}Estado del pago - Ciammaro{% endblock %}
+
+{% block content %}
+<section class="checkout">
+  <div class="checkout__box">
+
+    {% if estado == "success" %}
+      <h2 class="checkout__title">¡Pago aprobado! 🎉</h2>
+      <p class="desc">Gracias por tu compra. Ya tenemos tu pedido y lo vamos a preparar.</p>
+
+      <div style="margin-top:14px; display:grid; gap:10px;">
+        {% if order_id %}
+          <div class="desc"><strong>N° de orden:</strong> {{ order_id }}</div>
+        {% endif %}
+
+        {% if nombre or email %}
+          <div class="desc">
+            <strong>Cliente:</strong>
+            {{ nombre if nombre else "—" }} · {{ email if email else "—" }}
+          </div>
+        {% endif %}
+
+        {% if direccion %}
+          <div class="desc"><strong>Dirección:</strong> {{ direccion }}</div>
+        {% endif %}
+
+        {% if envio_cp %}
+          <div class="desc"><strong>Código postal:</strong> {{ envio_cp }}</div>
+        {% endif %}
+      </div>
+
+      <hr style="margin:16px 0; border:none; border-top:1px solid #e7e7e7;">
+
+      <h3 style="font-size:16px; margin:0 0 10px;">Resumen del pedido</h3>
+
+      {% if items %}
+      <ul style="list-style:none; padding:0; margin:0; display:grid; gap:10px;">
+        {% for it in items %}
+        <li style="display:flex; justify-content:space-between; gap:12px;">
+          <span class="desc">{{ it.qty }} × {{ it.p['nombre'] }}</span>
+          <strong>${{ "{:,.0f}".format(it.subtotal).replace(",", ".") }}</strong>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if envio_costo and envio_costo > 0 %}
+        <div style="display:flex; justify-content:space-between; margin-top:12px;">
+          <span class="desc">Envío (Correo Argentino)</span>
+          <strong>${{ "{:,.0f}".format(envio_costo).replace(",", ".") }}</strong>
+        </div>
+      {% endif %}
+
+      <div style="display:flex; justify-content:space-between; margin-top:14px; padding-top:14px; border-top:1px solid #e7e7e7;">
+        <span class="desc"><strong>Total</strong></span>
+        <strong>${{ "{:,.0f}".format(total).replace(",", ".") }}</strong>
+      </div>
+
+      {# Opcional: mostrar datos que vienen de MP en la URL #}
+      {% if mp_payment_id or mp_status or mp_preference_id %}
+      <details style="margin-top:14px;">
+        <summary class="desc" style="cursor:pointer;">Detalles del pago</summary>
+        <div class="desc" style="margin-top:8px;">
+          {% if mp_payment_id %}<div><strong>payment_id:</strong> {{ mp_payment_id }}</div>{% endif %}
+          {% if mp_status %}<div><strong>status:</strong> {{ mp_status }}</div>{% endif %}
+          {% if mp_preference_id %}<div><strong>preference_id:</strong> {{ mp_preference_id }}</div>{% endif %}
+        </div>
+      </details>
+      {% endif %}
+
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
+        <a class="btn btn--primary" href="{{ url_for('remeras') }}">Seguir comprando</a>
+        <a class="btn btn--ghost" href="{{ url_for('index') }}">Volver al inicio</a>
+      </div>
+
+    {% elif estado == "pending" %}
+      <h2 class="checkout__title">Pago pendiente ⏳</h2>
+      <p class="desc">Tu pago está en revisión o pendiente. Te avisaremos cuando se confirme.</p>
+      <a class="btn btn--primary" href="{{ url_for('index') }}">Volver al inicio</a>
+
+    {% else %}
+      <h2 class="checkout__title">Pago rechazado ❌</h2>
+      <p class="desc">No se pudo completar el pago. Podés intentarlo nuevamente.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;">
+        <a class="btn btn--primary" href="{{ url_for('pagar') }}">Volver a pagar</a>
+        <a class="btn btn--ghost" href="{{ url_for('carrito') }}">Volver al carrito</a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Checkout - Ciammaro{% endblock %}
+
+{% block content %}
+<section class="checkout">
+  <div class="checkout__grid">
+
+    <!-- COLUMNA IZQUIERDA: ENVÍO + DATOS -->
+    <div class="checkout__box">
+      <h2 class="checkout__title">Datos de envío</h2>
+
+      <!-- 1) CALCULAR ENVÍO (CP) -->
+      <form action="{{ url_for('envio_cotizar') }}" method="post" class="checkout__form" style="margin-bottom:16px;">
+        <div class="field">
+          <label>Código postal</label>
+          <input type="text" name="cp" placeholder="Ej: 1406" value="{{ envio_cp | default('') }}" required>
+        </div>
+
+        <button class="btn btn--ghost" type="submit">
+          Calcular envío
+        </button>
+
+        {% if envio_costo and envio_costo > 0 %}
+          <p class="summary__note" style="margin-top:10px;">
+            Envío estimado: <strong>${{ "{:,.0f}".format(envio_costo).replace(",", ".") }}</strong>
+          </p>
+        {% else %}
+          <p class="summary__note" style="margin-top:10px;">
+            Calculá el envío para ver el total final.
+          </p>
+        {% endif %}
+      </form>
+
+      <hr style="margin:18px 0; opacity:.2">
+
+      <!-- 2) DATOS DEL COMPRADOR -->
+      <form action="{{ url_for('crear_pedido') }}" method="post" class="checkout__form">
+
+        <div class="field">
+          <label>Nombre y apellido</label>
+          <input type="text" name="nombre" placeholder="Juan Pérez" required>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="juan@email.com"
+                 value="{{ email_prefill | default('') }}" required>
+        </div>
+
+        <div class="field">
+          <label>Dirección</label>
+          <input type="text" name="direccion" placeholder="Calle 123, Ciudad" required>
+        </div>
+
+        <button class="btn btn--primary" type="submit">
+          Continuar al pago
+        </button>
+      </form>
+    </div>
+
+    <!-- COLUMNA DERECHA: RESUMEN -->
+    <div class="checkout__box checkout__summary">
+      <h2 class="checkout__title">Tu pedido</h2>
+
+      <ul class="summary__list">
+        {% for it in items %}
+        <li class="summary__item">
+          <span>{{ it.qty }} × {{ it.p['nombre'] }}</span>
+          <strong>${{ "{:,.0f}".format(it.subtotal).replace(",", ".") }}</strong>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <!-- Subtotal / Envío -->
+      <div class="summary__row">
+        <span>Subtotal</span>
+        <strong>${{ "{:,.0f}".format(subtotal).replace(",", ".") }}</strong>
+      </div>
+
+      <div class="summary__row">
+        <span>Envío {% if envio_cp %}(CP {{ envio_cp }}){% endif %}</span>
+        <strong>
+          {% if envio_costo and envio_costo > 0 %}
+            ${{ "{:,.0f}".format(envio_costo).replace(",", ".") }}
+          {% else %}
+            —
+          {% endif %}
+        </strong>
+      </div>
+
+      <div class="summary__total">
+        <span>Total</span>
+        <strong>${{ "{:,.0f}".format(total).replace(",", ".") }}</strong>
+      </div>
+
+      <p class="summary__note">
+        El envío es una estimación (Correo Argentino). Se confirma al despachar.
+      </p>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
