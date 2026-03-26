@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Ciammaro — Ropa urbana con identidad{% endblock %}
+
+{% block content %}
+
+<!-- BANNER DESTACADO -->
+<div style="background:var(--black); border-radius:12px; padding:36px 48px; margin-bottom:40px; display:flex; align-items:center; justify-content:space-between; gap:24px; overflow:hidden; position:relative;">
+  <!-- Decoración fondo -->
+  <div style="position:absolute; right:-40px; top:50%; transform:translateY(-50%); width:280px; height:280px; border-radius:50%; border:1px solid rgba(193,18,31,.15);"></div>
+  <div style="position:absolute; right:20px; top:50%; transform:translateY(-50%); width:180px; height:180px; border-radius:50%; border:1px solid rgba(193,18,31,.1);"></div>
+  <div style="position:absolute; right:60px; top:50%; transform:translateY(-50%); font-family:'Playfair Display',serif; font-size:9rem; font-weight:600; color:rgba(193,18,31,.07); line-height:1; user-select:none; pointer-events:none;">C</div>
+
+  <!-- Texto -->
+  <div style="position:relative; z-index:2;">
+    <p style="font-size:.68rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin-bottom:10px;">✦ Colección 2025</p>
+    <h1 style="font-family:'Playfair Display',serif; font-size:clamp(1.6rem,3vw,2.5rem); font-weight:600; color:#fff; line-height:1.2; margin-bottom:8px; letter-spacing:-.01em;">
+      Ropa con <em style="font-style:italic; color:var(--accent);">identidad</em> y calidad
+    </h1>
+    <p style="font-size:.88rem; color:rgba(255,255,255,.45); font-weight:300; max-width:360px; line-height:1.65;">Diseños exclusivos · Algodón premium · Envíos a todo el país</p>
+  </div>
+
+  <!-- CTA -->
+  <div style="position:relative; z-index:2; flex-shrink:0;">
+    <a href="{{ url_for('remeras') }}" class="btn btn--accent" style="font-size:.8rem; padding:13px 28px;">Ver colección →</a>
+  </div>
+</div>
+
+<!-- DESTACADOS -->
+<div id="destacados">
+  <div class="section-header">
+    <span class="section-title">Más vendidos</span>
+    <a class="section-link" href="{{ url_for('remeras') }}">Ver todo →</a>
+  </div>
+
+  <div class="grid">
+    {% set destacados = [
+      ("remerinarda.png",                    "Remera Ciammaro Unconditional",        "Diseño exclusivo · Oversize · Algodón premium"),
+      ("remera_tokyo_violeta.png",            "Remera Ciammaro Tokyo Limited Edition","Edición limitada · Colores vibrantes"),
+      ("remera_tokyo_dripp1.png",             "Remera Ciammaro Tokyo Dripp",          "Estilo urbano · Diseño exclusivo espalda"),
+      ("remera_blanca_logo_ciammaro_rojo.png","Remera Ciammaro Hanya Red",            "Arte japonés · Ilustración Hanya"),
+    ] %}
+    {% for img, nombre, desc in destacados %}
+    <article class="card">
+      <div class="card__media">
+        <img src="{{ url_for('static', filename=img) }}" alt="{{ nombre }}">
+      </div>
+      <div class="card__body">
+        <div class="card__top">
+          <h3>{{ nombre }}</h3>
+          <div class="price">$17.000</div>
+        </div>
+        <p class="desc">{{ desc }}</p>
+        <a class="btn btn--ghost" href="{{ url_for('remeras') }}">Ver y comprar</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- BENEFICIOS -->
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px; background:var(--gray-2); border-radius:10px; overflow:hidden; margin-top:48px;">
+  {% for icon, title, text in [
+    ('🚚','Envío a todo el país','Desde $35.000 envío gratis por Correo Argentino'),
+    ('💳','3 cuotas sin interés','Con todas las tarjetas de crédito'),
+    ('↩','Cambios y devoluciones','30 días para cambiar tu talle'),
+    ('🔒','Compra segura','Pagá con Mercado Pago sin riesgo')
+  ] %}
+  <div style="background:#fff; padding:22px 18px; display:flex; align-items:flex-start; gap:14px;">
+    <span style="font-size:1.5rem; flex-shrink:0;">{{ icon }}</span>
+    <div>
+      <p style="font-size:.82rem; font-weight:700; color:var(--black); margin-bottom:3px;">{{ title }}</p>
+      <p style="font-size:.77rem; color:var(--gray-4); line-height:1.5;">{{ text }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

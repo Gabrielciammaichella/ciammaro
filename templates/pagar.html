@@ -1,0 +1,31 @@
+{# templates/pagar.html #}
+{% extends "base.html" %}
+{% block title %}Pagar - Ciammaro{% endblock %}
+
+{% block content %}
+<section class="checkout">
+  <div style="max-width:520px; margin:0 auto;">
+
+    <!-- Caja principal -->
+    <div class="checkout__box">
+      <h2 class="checkout__title">Finalizar compra</h2>
+      <p class="desc">
+        Vas a ser redirigido a <strong>Mercado Pago</strong> para pagar con tarjeta de crédito o débito.
+      </p>
+
+      <form action="{{ url_for('mp_crear_preferencia') }}" method="post">
+        <button class="btn btn--primary" type="submit">
+          Pagar con Mercado Pago
+        </button>
+      </form>
+
+      <p class="summary__note" style="margin-top:12px;">
+        Si cancelás el pago, vas a volver a tu carrito.
+      </p>
+    </div>
+
+
+
+  </div>
+</section>
+{% endblock %}

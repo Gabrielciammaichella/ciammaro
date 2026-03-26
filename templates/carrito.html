@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Carrito — Ciammaro{% endblock %}
+
+{% block content %}
+
+<div class="cart__header">
+  <h2 class="cart__title">Mi carrito</h2>
+  <a class="cart__back" href="{{ url_for('remeras') }}">← Seguir comprando</a>
+</div>
+
+{% if items|length == 0 %}
+<div class="cart__empty">
+  <span style="font-size:3rem;">🛒</span>
+  <p>Tu carrito está vacío.</p>
+  <a class="btn btn--primary" href="{{ url_for('remeras') }}">Ver remeras</a>
+</div>
+
+{% else %}
+<div class="cart__grid">
+
+  <!-- LISTA -->
+  <div class="cart__box">
+    {% for it in items %}
+    <div class="cart__item">
+
+      <div class="cart__itemMedia">
+        <img src="{{ url_for('static', filename=it.p['img']) }}" alt="{{ it.p['nombre'] }}">
+      </div>
+
+      <div class="cart__itemInfo">
+        <div class="cart__itemName">{{ it.p['nombre'] }}</div>
+        <div class="cart__itemPrice">${{ "{:,.0f}".format(it.p['precio']).replace(",", ".") }}</div>
+        <div style="font-size:.78rem; color:var(--gray-4); margin-top:4px;">
+          Talle: <strong>{{ it.talle }}</strong> &nbsp;·&nbsp; Color: <strong>{{ it.color }}</strong>
+        </div>
+      </div>
+
+      <div class="cart__itemActions">
+        <form class="qty" action="{{ url_for('cart_update', key=it.key) }}" method="post">
+          <input class="qty__input" type="number" name="qty" min="0" value="{{ it.qty }}">
+          <button class="btn btn--ghost" type="submit" style="width:auto; padding:8px 14px; font-size:.72rem;">OK</button>
+        </form>
+
+        <div class="cart__subtotal">
+          <span>Subtotal</span>
+          <strong>${{ "{:,.0f}".format(it.subtotal).replace(",", ".") }}</strong>
+        </div>
+
+        <form action="{{ url_for('cart_remove', key=it.key) }}" method="post">
+          <button class="btn btn--danger" type="submit" style="width:auto; padding:8px 14px; font-size:.72rem;">Quitar</button>
+        </form>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- RESUMEN -->
+  <aside class="cart__summary cart__box">
+    <div class="summary__title">Resumen</div>
+    <div class="summary__body">
+      <div class="summary__row">
+        <span>Subtotal ({{ items|length }} producto{% if items|length != 1 %}s{% endif %})</span>
+        <strong>${{ "{:,.0f}".format(total).replace(",", ".") }}</strong>
+      </div>
+      <div class="summary__row">
+        <span>Envío</span>
+        <strong>Se calcula al pagar</strong>
+      </div>
+      <div class="summary__total">
+        <span>Total</span>
+        <strong>${{ "{:,.0f}".format(total).replace(",", ".") }}</strong>
+      </div>
+      <a class="btn btn--accent summary__pay" href="{{ url_for('checkout') }}">Ir a pagar →</a>
+      <p class="summary__note">Calculás el envío en el siguiente paso.</p>
+    </div>
+  </aside>
+
+</div>
+{% endif %}
+
+{% endblock %}

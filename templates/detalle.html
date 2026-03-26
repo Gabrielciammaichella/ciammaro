@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}{{ p['nombre'] }} — Ciammaro{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<div style="font-size:.8rem; color:var(--gray-4); margin-bottom:28px;">
+  <a href="{{ url_for('index') }}" style="color:var(--gray-4);">Inicio</a>
+  <span style="margin:0 8px;">›</span>
+  <a href="{{ url_for('remeras') }}" style="color:var(--gray-4);">Remeras</a>
+  <span style="margin:0 8px;">›</span>
+  <span style="color:var(--black);">{{ p['nombre'] }}</span>
+</div>
+
+<div class="detalle">
+
+  <!-- IMAGEN -->
+  <div class="detalle__img">
+    <img src="{{ url_for('static', filename=p['img']) }}" alt="{{ p['nombre'] }}">
+  </div>
+
+  <!-- INFO + FORM -->
+  <div class="detalle__info">
+
+    <h1 class="detalle__title">{{ p['nombre'] }}</h1>
+    <div class="detalle__price">${{ "{:,.0f}".format(p['precio']).replace(",", ".") }}</div>
+
+    <!-- Descripción del producto -->
+    <div class="detalle__desc">
+      <p>{{ p['desc'] }}</p>
+      <ul class="detalle__features">
+        <li>Remera 100% de algodón</li>
+        <li>Calidad premium</li>
+        <li>Costuras reforzadas</li>
+      </ul>
+    </div>
+
+    <!-- FORM -->
+    <form action="{{ url_for('cart_add', pid=p['id']) }}" method="post" class="detalle__form">
+
+      <!-- TALLE -->
+      <div class="detalle__group">
+        <label class="detalle__label">Talle</label>
+        <div class="product-form__options">
+          {% for talle in ['S','M','L','XL'] %}
+          <label class="size-opt">
+            <input type="radio" name="talle" value="{{ talle }}" {% if talle == 'M' %}checked{% endif %} required>
+            <span>{{ talle }}</span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- COLOR -->
+      <div class="detalle__group">
+        <label class="detalle__label">Color</label>
+        <div class="product-form__options">
+          {% for color, hex in [('Negro','#111111'),('Blanco','#f5f5f5'),('Gris','#888888')] %}
+          <label class="color-opt" title="{{ color }}">
+            <input type="radio" name="color" value="{{ color }}" {% if color == 'Negro' %}checked{% endif %} required>
+            <span style="background:{{ hex }};{% if color == 'Blanco' %}border:1.5px solid #ccc;{% endif %}"></span>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- CANTIDAD -->
+      <div class="detalle__group">
+        <label class="detalle__label">Cantidad</label>
+        <div class="product-form__qty">
+          <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
+          <input type="number" name="qty" value="1" min="1" max="10" class="qty-val" readonly>
+          <button type="button" class="qty-btn" onclick="changeQty(this,1)">+</button>
+        </div>
+      </div>
+
+      <!-- BOTONES -->
+      <div class="detalle__btns">
+        <button class="btn btn--ghost" type="submit" name="action" value="carrito">
+          🛒 Agregar al carrito
+        </button>
+        <button class="btn btn--accent" type="submit" name="action" value="comprar">
+          Comprar ahora
+        </button>
+      </div>
+
+    </form>
+
+    <a href="{{ url_for('remeras') }}" style="display:inline-block; margin-top:16px; font-size:.82rem; color:var(--gray-4);">← Volver al catálogo</a>
+
+  </div>
+</div>
+
+<script>
+function changeQty(btn, delta) {
+  const input = btn.parentElement.querySelector('.qty-val');
+  const val = parseInt(input.value) + delta;
+  if (val >= 1 && val <= 10) input.value = val;
+}
+</script>
+
+<style>
+/* DETALLE */
+.detalle { display:grid; grid-template-columns:1fr 1fr; gap:52px; align-items:start; }
+
+.detalle__img { border-radius:12px; overflow:hidden; background:var(--gray-1); }
+.detalle__img img { width:100%; display:block; }
+
+.detalle__title { font-family:"Playfair Display",serif; font-size:1.7rem; font-weight:600; line-height:1.2; margin-bottom:10px; }
+.detalle__price { font-size:1.6rem; font-weight:800; color:var(--black); margin-bottom:20px; }
+
+.detalle__desc { margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--gray-2); }
+.detalle__desc p { font-size:.92rem; color:var(--gray-4); line-height:1.7; margin-bottom:12px; }
+.detalle__features { list-style:none; display:flex; flex-direction:column; gap:6px; }
+.detalle__features li { font-size:.88rem; color:var(--gray-4); padding-left:16px; position:relative; }
+.detalle__features li::before { content:'✓'; position:absolute; left:0; color:var(--accent); font-weight:700; }
+
+.detalle__form { display:flex; flex-direction:column; gap:20px; }
+.detalle__group { }
+.detalle__label { font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gray-4); display:block; margin-bottom:8px; }
+
+.detalle__btns { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.detalle__btns .btn { width:100%; padding:14px; font-size:.82rem; }
+.detalle__btns .btn--ghost { width:100%; }
+
+/* Reutilizamos clases de remeras.html */
+.product-form__options { display:flex; gap:8px; flex-wrap:wrap; }
+.size-opt input { display:none; }
+.size-opt span { display:flex; align-items:center; justify-content:center; width:42px; height:42px; border:1.5px solid var(--gray-2); border-radius:4px; font-size:.82rem; font-weight:700; cursor:pointer; transition:.2s; color:var(--gray-4); }
+.size-opt input:checked + span { border-color:var(--black); background:var(--black); color:#fff; }
+.size-opt span:hover { border-color:var(--black); color:var(--black); }
+.color-opt input { display:none; }
+.color-opt span { display:block; width:32px; height:32px; border-radius:50%; cursor:pointer; transition:transform .2s, box-shadow .2s; }
+.color-opt input:checked + span { transform:scale(1.15); box-shadow:0 0 0 2.5px #fff, 0 0 0 4px var(--black); }
+.color-opt span:hover { transform:scale(1.1); }
+.product-form__qty { display:flex; align-items:center; border:1.5px solid var(--gray-2); border-radius:6px; overflow:hidden; width:fit-content; }
+.qty-btn { width:38px; height:38px; border:none; background:var(--gray-1); font-size:1.1rem; font-weight:700; color:var(--gray-4); cursor:pointer; transition:background .2s; display:flex; align-items:center; justify-content:center; }
+.qty-btn:hover { background:var(--gray-2); color:var(--black); }
+.qty-val { width:50px; height:38px; border:none; border-left:1.5px solid var(--gray-2); border-right:1.5px solid var(--gray-2); text-align:center; font-size:.95rem; font-weight:700; font-family:inherit; background:#fff; color:var(--black); outline:none; }
+
+@media (max-width:760px) {
+  .detalle { grid-template-columns:1fr; gap:28px; }
+}
+</style>
+
+{% endblock %}

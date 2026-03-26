@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta — Ciammaro{% endblock %}
+
+{% block content %}
+<section class="auth">
+  <div class="auth__logo">
+    <img src="{{ url_for('static', filename='logo-ciammaro.png') }}" alt="Ciammaro" style="height:40px;">
+  </div>
+  <h1>Crear cuenta</h1>
+
+  <form class="auth__form" method="post" novalidate>
+    <div class="field">
+      <label>Nombre</label>
+      <input type="text" name="nombre" placeholder="Tu nombre" required autocomplete="given-name">
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="tu@email.com" required autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Contraseña <span style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--gray-3);">(mínimo 6 caracteres)</span></label>
+      <input type="password" name="password" placeholder="••••••••" required autocomplete="new-password">
+    </div>
+    <div class="field">
+      <label>Repetir contraseña</label>
+      <input type="password" name="password2" placeholder="••••••••" required autocomplete="new-password">
+    </div>
+    <button class="auth__submit" type="submit">Crear cuenta</button>
+  </form>
+
+  <p class="auth__switch">
+    ¿Ya tenés cuenta? <a href="{{ url_for('login') }}">Iniciá sesión</a>
+  </p>
+</section>
+{% endblock %}

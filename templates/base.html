@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Ciammaro{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<header class="header">
+
+  <!-- PROMO BAR -->
+  <div class="promo">
+    <div class="promo_inner">
+      <div class="promo_track">
+        <div class="promo_content">
+          <span class="promo_item">{{ promo_text }}</span>
+          <span class="promo_item">🔒 Compra 100% segura</span>
+          <span class="promo_item">🎨 Diseños exclusivos</span>
+        </div>
+        <div class="promo_content" aria-hidden="true">
+          <span class="promo_item">{{ promo_text }}</span>
+          <span class="promo_item">🔒 Compra 100% segura</span>
+          <span class="promo_item">🎨 Diseños exclusivos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <a class="brand" href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='logo-ciammaro.png') }}" alt="Ciammaro" class="logo">
+    </a>
+
+    <form class="search" action="#" method="get">
+      <input class="search__input" type="text" name="q" placeholder="Buscar productos..." />
+      <button class="search__btn" type="submit" aria-label="Buscar">⌕</button>
+    </form>
+
+    <div class="actions">
+      <a class="action" href="{% if current_user.is_authenticated %}{{ url_for('account') }}{% else %}{{ url_for('login') }}{% endif %}">
+        <span class="action__icon">👤</span>
+        <span class="action__text">{% if current_user.is_authenticated %}Mi cuenta{% else %}Ingresar{% endif %}</span>
+      </a>
+
+      {% if current_user.is_authenticated %}
+      <a class="action" href="{{ url_for('logout') }}">
+        <span class="action__icon">↩</span>
+        <span class="action__text">Salir</span>
+      </a>
+      {% endif %}
+
+      <a class="action" href="{{ url_for('carrito') }}">
+        <span class="action__icon">🛒</span>
+        <span class="action__text">Carrito</span>
+        {% set cart = session.get('cart', {}) %}
+        {% set ns = namespace(count=0) %}
+        {% for k, v in cart.items() %}{% set ns.count = ns.count + v %}{% endfor %}
+        <span class="badge">{{ ns.count }}</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="nav__link" href="{{ url_for('index') }}">Inicio</a>
+    <a class="nav__link" href="{{ url_for('remeras') }}">Remeras</a>
+    <a class="nav__link" href="#">Novedades</a>
+    <a class="nav__link" href="#">Guía de talles</a>
+    <a class="nav__link" href="#">Contacto</a>
+  </nav>
+</header>
+
+<!-- FLASHES -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, message in messages %}
+        <li class="flash flash--{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<main class="page">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <div class="footer__top">
+    <div class="footer__brand">
+      <img src="{{ url_for('static', filename='logo-ciammaro.png') }}" alt="Ciammaro" class="logo-footer">
+      <p>Ropa urbana con identidad propia. Diseños exclusivos, calidad premium y envíos a todo el país.</p>
+      <div class="footer__social">
+        <a href="#" aria-label="Instagram">📷</a>
+        <a href="#" aria-label="TikTok">🎵</a>
+        <a href="#" aria-label="WhatsApp">💬</a>
+      </div>
+    </div>
+
+    <div class="footer__col">
+      <h4>Tienda</h4>
+      <ul>
+        <li><a href="{{ url_for('remeras') }}">Remeras</a></li>
+        <li><a href="#">Novedades</a></li>
+        <li><a href="#">Más vendidos</a></li>
+        <li><a href="#">Ofertas</a></li>
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h4>Ayuda</h4>
+      <ul>
+        <li><a href="#">Guía de talles</a></li>
+        <li><a href="#">Cómo comprar</a></li>
+        <li><a href="#">Cambios y devoluciones</a></li>
+        <li><a href="#">Preguntas frecuentes</a></li>
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="#">WhatsApp</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">info@ciammaro.com</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <p class="footer__copy">© 2025 Ciammaro. Todos los derechos reservados.</p>
+    <div class="footer__pay">
+      <span>Visa</span>
+      <span>Mastercard</span>
+      <span>Mercado Pago</span>
+      <span>Transferencia</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

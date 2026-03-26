@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Estado del pago — Ciammaro{% endblock %}
+
+{% block content %}
+<div class="resultado">
+
+  {% if estado == "success" %}
+    <div class="resultado__icon">🎉</div>
+    <h2 class="resultado__title">¡Pago aprobado!</h2>
+    <p class="resultado__sub">Gracias por tu compra. Ya tenemos tu pedido y lo vamos a preparar.</p>
+
+    <div class="resultado__box">
+      {% if orden_id %}<div class="resultado__row"><span>N° de orden</span><strong>{{ orden_id }}</strong></div>{% endif %}
+      {% if nombre %}<div class="resultado__row"><span>Cliente</span><strong>{{ nombre }}</strong></div>{% endif %}
+      {% if email %}<div class="resultado__row"><span>Email</span><strong>{{ email }}</strong></div>{% endif %}
+      {% if direccion %}<div class="resultado__row"><span>Dirección</span><strong>{{ direccion }}</strong></div>{% endif %}
+      {% if envio_cp %}<div class="resultado__row"><span>Código postal</span><strong>{{ envio_cp }}</strong></div>{% endif %}
+    </div>
+
+    {% if items %}
+    <div class="resultado__box">
+      {% for it in items %}
+      <div class="resultado__row">
+        <span>{{ it.qty }} × {{ it.p['nombre'] }}</span>
+        <strong>${{ "{:,.0f}".format(it.subtotal).replace(",", ".") }}</strong>
+      </div>
+      {% endfor %}
+      {% if envio_costo and envio_costo > 0 %}
+      <div class="resultado__row">
+        <span>Envío</span>
+        <strong>${{ "{:,.0f}".format(envio_costo).replace(",", ".") }}</strong>
+      </div>
+      {% endif %}
+      <div class="resultado__total">
+        <span>Total</span>
+        <strong>${{ "{:,.0f}".format(total).replace(",", ".") }}</strong>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="resultado__btns">
+      <a class="btn btn--primary" href="{{ url_for('remeras') }}">Seguir comprando</a>
+      <a class="btn btn--ghost" href="{{ url_for('index') }}">Inicio</a>
+    </div>
+
+  {% elif estado == "pending" %}
+    <div class="resultado__icon">⏳</div>
+    <h2 class="resultado__title">Pago pendiente</h2>
+    <p class="resultado__sub">Tu pago está en revisión. Te avisaremos cuando se confirme.</p>
+    <div class="resultado__btns">
+      <a class="btn btn--primary" href="{{ url_for('index') }}">Volver al inicio</a>
+    </div>
+
+  {% else %}
+    <div class="resultado__icon">❌</div>
+    <h2 class="resultado__title">Pago rechazado</h2>
+    <p class="resultado__sub">No se pudo completar el pago. Podés intentarlo nuevamente.</p>
+    <div class="resultado__btns">
+      <a class="btn btn--accent" href="{{ url_for('pagar') }}">Volver a pagar</a>
+      <a class="btn btn--ghost" href="{{ url_for('carrito') }}">Ver carrito</a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

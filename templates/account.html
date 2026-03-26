@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Mi cuenta — Ciammaro{% endblock %}
+
+{% block content %}
+<div class="account">
+  <div class="account__header">
+    <div class="account__avatar">{{ (current_user.nombre or current_user.email)[0].upper() }}</div>
+    <div>
+      <div class="account__name">{{ current_user.nombre or "Mi cuenta" }}</div>
+      <div class="account__email">{{ current_user.email }}</div>
+    </div>
+  </div>
+
+  <div class="account__cards">
+    <div class="account__card">
+      <h3>Mis pedidos</h3>
+      <p>Todavía no realizaste ningún pedido.</p>
+    </div>
+    <div class="account__card">
+      <h3>Mis datos</h3>
+      <p>{{ current_user.nombre or "—" }}<br>{{ current_user.email }}</p>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    <a class="btn btn--ghost" href="{{ url_for('remeras') }}">Ver remeras</a>
+    <a class="btn btn--danger" href="{{ url_for('logout') }}">Cerrar sesión</a>
+  </div>
+</div>
+{% endblock %}
