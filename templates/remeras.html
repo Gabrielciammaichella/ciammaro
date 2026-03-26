@@ -12,9 +12,9 @@
 <!-- GRID -->
 <div class="grid">
   {% for p in productos %}
-  <article class="card" style="overflow:visible;">
+  <article class="card">
 
-    <div class="card__media" style="border-radius:10px 10px 0 0; overflow:hidden;">
+    <div class="card__media">
       <img src="{{ url_for('static', filename=p['img']) }}" alt="{{ p['nombre'] }}">
     </div>
 
@@ -101,8 +101,7 @@ function changeQty(btn, delta) {
 .qty-btn:hover { background:var(--gray-2); color:var(--black); }
 .qty-val { width:42px; height:32px; border:none; border-left:1.5px solid var(--gray-2); border-right:1.5px solid var(--gray-2); text-align:center; font-size:.9rem; font-weight:700; font-family:inherit; background:#fff; color:var(--black); outline:none; }
 .product-form__btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px; }
-.product-form__btns .btn { width:100%; font-size:.72rem; padding:9px 10px; white-space:nowrap; overflow:visible; }
-.product-form__btns .btn--ghost { width:100%; }
+.product-form__btns .btn { width:100%; font-size:.72rem; padding:9px 10px; white-space:nowrap; }
 </style>
 
 {% endblock %}

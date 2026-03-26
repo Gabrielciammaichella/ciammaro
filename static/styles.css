@@ -63,18 +63,6 @@ button { cursor: pointer; font-family: "DM Sans", sans-serif; }
 /* PÁGINA */
 .page { max-width: 1200px; margin: 0 auto; padding: 32px 4vw 80px; }
 
-/* HERO */
-.hero { border-radius: 10px; overflow: hidden; background: var(--black); position: relative; min-height: 340px; display: flex; align-items: center; margin-bottom: 40px; }
-.hero__bg { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 70% 50%, rgba(193,18,31,.2), transparent 70%), linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); }
-.hero__content { position: relative; z-index: 2; padding: 48px 5vw; max-width: 540px; }
-.hero__eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
-.hero__title { font-family: "Playfair Display", serif; font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 600; color: #fff; line-height: 1.15; margin-bottom: 14px; letter-spacing: -.02em; }
-.hero__sub { font-size: .97rem; color: rgba(255,255,255,.5); margin-bottom: 28px; font-weight: 300; line-height: 1.7; }
-.hero__deco { position: absolute; right: 0; top: 0; bottom: 0; width: 42%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.hero__deco-inner { width: 200px; height: 200px; border-radius: 50%; border: 1px solid rgba(193,18,31,.2); display: flex; align-items: center; justify-content: center; position: relative; }
-.hero__deco-inner::before { content: ''; position: absolute; width: 140px; height: 140px; border-radius: 50%; border: 1px solid rgba(193,18,31,.12); }
-.hero__deco-letter { font-family: "Playfair Display", serif; font-size: 7rem; color: rgba(193,18,31,.15); font-weight: 600; line-height: 1; user-select: none; }
-
 /* SECTION HEADER */
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
 .section-title { font-size: .7rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--black); position: relative; padding-left: 12px; }
@@ -225,5 +213,4 @@ button { cursor: pointer; font-family: "DM Sans", sans-serif; }
   .footer__top { grid-template-columns: 1fr; }
   .account__cards { grid-template-columns: 1fr; }
   .hero { min-height: 260px; }
-  .hero__deco { display: none; }
 }

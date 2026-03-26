@@ -78,15 +78,15 @@ with app.app_context():
 
 
 # ----------------------------
-# "CATALOGO" TEMPORAL (después lo pasamos a DB)
+# CATÁLOGO DE PRODUCTOS
 # ----------------------------
 PRODUCTOS = [
-    {"id": 1, "nombre": "Remera Ciammaro Unconditional", "precio": 17000, "desc": "Diseño exclusivo frente y espalda · Algodón premium · Oversize", "img": "remerinarda.png"},
-    {"id": 2, "nombre": "Remera Ciammaro Tokyo Limited Edition", "precio": 17000, "desc": "Edición limitada · Estampa Tokyo · Colores vibrantes", "img": "remera_tokyo_violeta.png"},
-    {"id": 3, "nombre": "Remera Ciammaro Tokyo Dripp", "precio": 17000, "desc": "Estilo urbano · Tokyo Dripp · Diseño exclusivo espalda", "img": "remera_tokyo_dripp1.png"},
-    {"id": 4, "nombre": "Remera Ciammaro Hanya Red", "precio": 17000, "desc": "Ilustración Hanya · Detalle rojo · Arte japonés", "img": "remera_blanca_logo_ciammaro_rojo.png"},
-    {"id": 5, "nombre": "Remera Ciammaro Life Brushstrokes", "precio": 17000, "desc": "Arte clásico · Life Brushstrokes · Diseño único espalda", "img": "remera_negra_color_marron.png"},
-    {"id": 6, "nombre": "Remera Soft Logo Ciammaro", "precio": 17000, "desc": "Logo bordado · Fit clásico · Básica premium", "img": "remera_soft_logo.png"},
+    {"id": 1, "nombre": "Remera Ciammaro Unconditional",        "precio": 17000, "desc": "Diseño exclusivo frente y espalda · Algodón premium · Oversize",       "img": "remerinarda.png"},
+    {"id": 2, "nombre": "Remera Ciammaro Tokyo Limited Edition","precio": 17000, "desc": "Edición limitada · Estampa Tokyo · Colores vibrantes",                 "img": "remera_tokyo_violeta.png"},
+    {"id": 3, "nombre": "Remera Ciammaro Tokyo Dripp",          "precio": 17000, "desc": "Estilo urbano · Tokyo Dripp · Diseño exclusivo espalda",               "img": "remera_tokyo_dripp1.png"},
+    {"id": 4, "nombre": "Remera Ciammaro Hanya Red",            "precio": 17000, "desc": "Ilustración Hanya · Detalle rojo · Arte japonés",                     "img": "remera_blanca_logo_ciammaro_rojo.png"},
+    {"id": 5, "nombre": "Remera Ciammaro Life Brushstrokes",    "precio": 17000, "desc": "Arte clásico · Life Brushstrokes · Diseño único espalda",              "img": "remera_negra_color_marron.png"},
+    {"id": 6, "nombre": "Remera Soft Logo Ciammaro",            "precio": 17000, "desc": "Logo bordado · Fit clásico · Básica premium",                         "img": "remera_soft_logo.png"},
 ]
 
 
@@ -110,7 +110,7 @@ def build_cart_items():
 
     for key, qty in cart.items():
         parts = key.split("|")
-        pid = int(parts[0])
+        pid   = int(parts[0])
         talle = parts[1] if len(parts) > 1 else "—"
         color = parts[2] if len(parts) > 2 else "—"
 
@@ -119,13 +119,14 @@ def build_cart_items():
             continue
         subtotal = p["precio"] * qty
         total += subtotal
-        items.append({"p": p, "qty": qty, "subtotal": subtotal, "talle": talle, "color": color, "key": key})
+        items.append({"p": p, "qty": qty, "subtotal": subtotal,
+                       "talle": talle, "color": color, "key": key})
 
     return items, total
 
 
 # ----------------------------
-# PROMO BAR DINÁMICA (arriba)
+# PROMO BAR DINÁMICA
 # ----------------------------
 @app.context_processor
 def inject_promo_envio():
@@ -133,35 +134,26 @@ def inject_promo_envio():
         f"🚚 Envío gratis en compras desde $ {fmt_ars(ENVIO_GRATIS_DESDE)} "
         f"· Envíos a todo el país"
     )
-
     return dict(
         ENVIO_GRATIS_DESDE=ENVIO_GRATIS_DESDE,
         promo_text=promo_text,
     )
 
+
 # ----------------------------
-# ENVIO (MVP por Código Postal) + envío gratis por monto
+# ENVÍO (por Código Postal)
 # ----------------------------
 def calc_envio(cp: str, subtotal: int) -> int:
     subtotal = int(subtotal or 0)
-
-    # envío gratis por monto
     if subtotal >= ENVIO_GRATIS_DESDE:
         return 0
-
     cp = (cp or "").strip()
     if len(cp) < 4:
         return 0
-
-    # CABA / AMBA (aprox)
     if cp.startswith("1"):
         return 4500
-
-    # Buenos Aires (aprox)
     if cp.startswith(("18", "19")) or cp.startswith("2"):
         return 5500
-
-    # Interior
     return 7500
 
 
@@ -169,18 +161,14 @@ def calc_envio(cp: str, subtotal: int) -> int:
 def envio_cotizar():
     cp = (request.form.get("cp") or "").strip()
     _, subtotal = build_cart_items()
-
     costo = calc_envio(cp, subtotal)
-
     session["envio_cp"] = cp
     session["envio_costo"] = int(costo)
     session.modified = True
-
     if int(costo) == 0 and int(subtotal) >= ENVIO_GRATIS_DESDE:
         flash(f"¡Envío gratis por compras desde $ {fmt_ars(ENVIO_GRATIS_DESDE)}!", "success")
     else:
         flash("Envío calculado.", "success")
-
     return redirect(url_for("checkout"))
 
 
@@ -221,7 +209,6 @@ def cart_add(pid):
     qty    = max(1, int(request.form.get("qty", 1) or 1))
     action = request.form.get("action", "carrito")
 
-    # Clave única por producto + talle + color
     key = f"{pid}|{talle}|{color}"
     cart = get_cart()
     cart[key] = cart.get(key, 0) + qty
@@ -253,7 +240,6 @@ def cart_update(key):
         cart.pop(key, None)
     else:
         cart[key] = qty
-
     save_cart(cart)
     return redirect(url_for("carrito"))
 
@@ -275,18 +261,17 @@ def checkout():
 
     items, subtotal = build_cart_items()
 
-    envio_cp = session.get("envio_cp", "")
+    envio_cp    = session.get("envio_cp", "")
     envio_costo = int(session.get("envio_costo", 0) or 0)
 
-    # Si supera el umbral, forzamos envío gratis aunque antes haya cotizado con costo
     if int(subtotal) >= ENVIO_GRATIS_DESDE:
         envio_costo = 0
         session["envio_costo"] = 0
         session.modified = True
 
     total_final = int(subtotal) + int(envio_costo)
-
     email_prefill = current_user.email if current_user.is_authenticated else ""
+
     return render_template(
         "checkout.html",
         items=items,
@@ -300,17 +285,17 @@ def checkout():
 
 @app.post("/checkout/crear-pedido")
 def crear_pedido():
-    nombre = request.form.get("nombre", "").strip()
-    email = request.form.get("email", "").strip()
+    nombre    = request.form.get("nombre", "").strip()
+    email     = request.form.get("email", "").strip()
     direccion = request.form.get("direccion", "").strip()
 
     if not nombre or not email or not direccion:
         flash("Completá nombre, email y dirección", "error")
         return redirect(url_for("checkout"))
 
-    session["checkout_nombre"] = nombre
-    session["checkout_email"] = email
-    session["checkout_direccion"] = direccion
+    session["checkout_nombre"]   = nombre
+    session["checkout_email"]    = email
+    session["checkout_direccion"]= direccion
     session.modified = True
 
     return redirect(url_for("pagar"))
@@ -347,20 +332,20 @@ def mp_crear_preferencia():
 
     mp_items = [
         {
-            "title": it["p"]["nombre"],
-            "quantity": int(it["qty"]),
+            "title":      it["p"]["nombre"],
+            "quantity":   int(it["qty"]),
             "unit_price": float(it["p"]["precio"]),
-            "currency_id": "ARS",
+            "currency_id":"ARS",
         }
         for it in items
     ]
 
     if envio_costo > 0:
         mp_items.append({
-            "title": "Envío (Correo Argentino)",
-            "quantity": 1,
+            "title":      "Envío (Correo Argentino)",
+            "quantity":   1,
             "unit_price": float(envio_costo),
-            "currency_id": "ARS",
+            "currency_id":"ARS",
         })
 
     preference_data = {
@@ -373,7 +358,6 @@ def mp_crear_preferencia():
     }
 
     pref = sdk.preference().create(preference_data)
-
     init_point = pref.get("response", {}).get("init_point")
     print("init_point:", init_point)
 
@@ -386,31 +370,25 @@ def mp_crear_preferencia():
 
 @app.get("/pago/success")
 def pago_success():
-    nombre = session.get("checkout_nombre", "")
-    email = session.get("checkout_email", "")
+    nombre    = session.get("checkout_nombre", "")
+    email     = session.get("checkout_email", "")
     direccion = session.get("checkout_direccion", "")
-
-    envio_cp = session.get("envio_cp", "")
+    envio_cp  = session.get("envio_cp", "")
     envio_costo = int(session.get("envio_costo", 0) or 0)
 
     items, subtotal = build_cart_items()
     if int(subtotal) >= ENVIO_GRATIS_DESDE:
         envio_costo = 0
 
-    total_final = int(subtotal) + int(envio_costo)
-
-    mp_payment_id = request.args.get("payment_id")
-    mp_status = request.args.get("status")
-    mp_preference_id = request.args.get("preference_id")
-
+    total_final       = int(subtotal) + int(envio_costo)
+    mp_payment_id     = request.args.get("payment_id")
+    mp_status         = request.args.get("status")
+    mp_preference_id  = request.args.get("preference_id")
     orden_id = f"CIAM-{datetime.now().strftime('%Y%m%d')}-{random.randint(1000, 9999)}"
 
-    session.pop("cart", None)
-    session.pop("envio_cp", None)
-    session.pop("envio_costo", None)
-    session.pop("checkout_nombre", None)
-    session.pop("checkout_email", None)
-    session.pop("checkout_direccion", None)
+    for k in ["cart", "envio_cp", "envio_costo",
+              "checkout_nombre", "checkout_email", "checkout_direccion"]:
+        session.pop(k, None)
     session.modified = True
 
     return render_template(
@@ -450,10 +428,10 @@ def register():
         return redirect(url_for("account"))
 
     if request.method == "POST":
-        nombre   = (request.form.get("nombre") or "").strip()
-        email    = (request.form.get("email") or "").strip().lower()
-        password = request.form.get("password") or ""
-        password2= request.form.get("password2") or ""
+        nombre    = (request.form.get("nombre") or "").strip()
+        email     = (request.form.get("email") or "").strip().lower()
+        password  = request.form.get("password") or ""
+        password2 = request.form.get("password2") or ""
 
         if not nombre or not email or not password:
             flash("Completá todos los campos.", "error")
@@ -489,7 +467,7 @@ def login():
         return redirect(url_for("account"))
 
     if request.method == "POST":
-        email = (request.form.get("email") or "").strip().lower()
+        email    = (request.form.get("email") or "").strip().lower()
         password = request.form.get("password") or ""
 
         user = User.query.filter_by(email=email).first()

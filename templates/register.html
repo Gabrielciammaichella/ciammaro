@@ -31,5 +31,29 @@
   <p class="auth__switch">
     ¿Ya tenés cuenta? <a href="{{ url_for('login') }}">Iniciá sesión</a>
   </p>
+{% block title %}Ciammaro — Crear cuenta{% endblock %}
+
+{% block content %}
+<section class="auth">
+  <h1>Crear cuenta</h1>
+  <p>Registrate con tu email.</p>
+
+  <form class="form" method="post" action="/register">
+    <label>Email</label>
+    <input name="email" type="email" placeholder="tu@email.com" required>
+
+    <label>Contraseña</label>
+    <input name="password" type="password" placeholder="mínimo 8 caracteres" required>
+
+    <label>Repetir contraseña</label>
+    <input name="password2" type="password" placeholder="repetir contraseña" required>
+
+    <button class="btn btn--ghost" type="submit">Crear cuenta</button>
+  </form>
+
+  <div class="auth__bottom">
+    <span>¿Ya tenés cuenta?</span>
+    <a class="link" href="/login">Iniciar sesión</a>
+  </div>
 </section>
 {% endblock %}
